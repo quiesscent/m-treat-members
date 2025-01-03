@@ -12,7 +12,9 @@ interface User {
   id: string;
   username: string;
   email: string;
-  phone: number;
+  first_name: string;
+  last_name: string;
+  number: number;
 }
 
 interface AuthState {

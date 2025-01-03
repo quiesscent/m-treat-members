@@ -1,15 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Form, Input, Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import axios from "axios";  // Add axios for making API requests
+import axios from "axios"; // Add axios for making API requests
 
 import { RootState } from "../../../redux/store";
 
 export default function Update() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -33,6 +32,7 @@ export default function Update() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -48,7 +48,7 @@ export default function Update() {
       // Get the token from localStorage or sessionStorage
       const token = localStorage.getItem("token");
 
-      const response = await axios.put(
+      await axios.put(
         "http://localhost:8000/api/update/",
         {
           username: formData.username,
@@ -60,14 +60,12 @@ export default function Update() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       // Redirect to dashboard on successful update
       router.push("/dashboard");
-    } catch (err) {
-      console.error(err);
-    }
+    } catch {}
   };
 
   return (
@@ -134,4 +132,3 @@ export default function Update() {
     </>
   );
 }
-
