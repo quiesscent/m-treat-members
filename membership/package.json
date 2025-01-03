@@ -6,7 +6,7 @@
 		"dev": "next dev --turbopack",
 		"build": "next build",
 		"start": "next start",
-		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
+		"lint": "eslint . && prettier --check . --ignore-path .prettierignore"	
 	},
 	"dependencies": {
 		"@nextui-org/button": "2.2.8",

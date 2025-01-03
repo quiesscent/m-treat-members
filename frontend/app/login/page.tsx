@@ -32,4 +32,4 @@ const Login = () => {
   );
 };
 
-export default Login; (e: React.FormEvent<HTMLFormElement>) =>
+export default Login;

@@ -1,32 +1,35 @@
-"use client"
+"use client";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Form, Input, Button } from "@nextui-org/react";
-import Link from 'next/link'
+import Link from "next/link";
+
+import { useAppDispatch } from "../../redux/hooks";
 import { loginUser } from "../../redux/slices/authSlice";
 import { RootState } from "../../redux/store";
-import { useRouter } from 'next/navigation';
+
 export default function Login() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useAppDispatch();
+  const { loading, error } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password}));
+    dispatch(loginUser({ email, password }));
   };
 
   return (
     <>
-    <Form
-        className="mt-[180px]  w-[400px]  flex flex-col gap-8"
+      <Form
+        className="mt-[180px] w-[400px] flex flex-col gap-8"
         validationBehavior="native"
         onSubmit={handleSubmit}
       >
-    <div className="items-center text-[20px] font-bold uppercase"> Login </div>
-        {error && <p>{error}</p>}
+        <div className="items-center text-[20px] font-bold uppercase">
+          Login
+        </div>
+        {error && <p className="text-red-500">{error}</p>}
         <Input
           isRequired
           errorMessage="Please enter a valid email"
@@ -55,7 +58,12 @@ export default function Login() {
           </Button>
         </div>
       </Form>
-      <p className="mt-8">Don't have and account ? Register <Link href="/register" className="text-sky-500">here</Link> </p>
+      <p className="mt-8">
+        Dont have an account? Register{" "}
+        <Link className="text-sky-500" href="/register">
+          here
+        </Link>
+      </p>
     </>
   );
 }

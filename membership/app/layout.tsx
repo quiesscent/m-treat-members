@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
 import { ReduxProvider } from "../redux/provider";
@@ -8,7 +7,6 @@ import { ReduxProvider } from "../redux/provider";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -37,18 +35,15 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <head />
       <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
+        className={clsx("min-h-screen bg-background font-sans iantialiased")}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+            <main className="container flex-grow">
               <ReduxProvider>{children}</ReduxProvider>
             </main>
             <footer className="w-full flex items-center justify-center py-3">
-             mtreat 
+              mtreat
             </footer>
           </div>
         </Providers>

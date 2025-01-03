@@ -64,7 +64,7 @@ CORS_ALLOWED_ORIGINS = [
 
 
 ROOT_URLCONF = 'mtreat.urls'
-
+AUTH_USER_MODEL = 'core.CustomUser'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
