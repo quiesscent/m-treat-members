@@ -42,7 +42,9 @@ export const loginUser = createAsyncThunk<
   AsyncThunkConfig // Rejection type
 >("auth/login", async (credentials, { rejectWithValue }) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/login`, credentials);
+    const response = await axios.post(`${API_BASE_URL}/login/`, credentials, {
+      headers: { "Content-Type": "application/json" },
+    });
 
     return response.data;
   } catch (error: any) {
@@ -52,11 +54,20 @@ export const loginUser = createAsyncThunk<
 
 export const registerUser = createAsyncThunk<
   { user: User }, // Return type
-  { username: string; email: string; password: string; phone: number }, // Argument type
+  {
+    username: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    number: number;
+    password: string;
+  }, // Argument type
   AsyncThunkConfig // Rejection type
 >("auth/register", async (userData, { rejectWithValue }) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/register`, userData);
+    const response = await axios.post(`${API_BASE_URL}/register/`, userData, {
+      headers: { "Content-Type": "application/json" },
+    });
 
     return response.data;
   } catch (error: any) {
@@ -66,11 +77,13 @@ export const registerUser = createAsyncThunk<
 // Async Thunks
 export const updateUser = createAsyncThunk<
   { user: Partial<User> }, // Return type
-  { username: string; phone: number }, // Argument type
+  { username: string; first_name: string; last_name: string; phone: number }, // Argument type
   AsyncThunkConfig // Rejection type
 >("auth/update", async (userData, { rejectWithValue }) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/update`, userData);
+    const response = await axios.put(`${API_BASE_URL}/update/`, userData, {
+      headers: { "Content-Type": "application/json" },
+    });
 
     return response.data;
   } catch (error: any) {

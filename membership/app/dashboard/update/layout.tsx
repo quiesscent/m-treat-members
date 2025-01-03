@@ -5,8 +5,8 @@ export default function RegisterLayout({
 }) {
   return (
     <>
-      <div className="flex">
-        <main style={{ marginLeft: "200px", padding: "20px" }}>{children}</main>
+      <div className="flex px-10">
+        <main>{children}</main>
       </div>
     </>
   );

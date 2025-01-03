@@ -1,39 +1,55 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Button } from "@nextui-org/react";
 
 const Dashboard = () => {
-  const [user, setUser] = useState<any>(null);
-  const [error, setError] = useState("");
+  const [user, setUser] = useState<any>(null); // Use 'any' or 'User' type if defined
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // To handle loading state
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem("token"); // Retrieve JWT token
-        const response = await fetch("http://127.0.0.1:8000/api/user-profile", {
+        const token = localStorage.getItem("token");
+
+        // Check if token exists before proceeding
+        if (!token) {
+          setError("No token found. Please log in.");
+          setLoading(false);
+
+          return;
+        }
+
+        // Send the request with the Authorization header
+        const response = await fetch("http://127.0.0.1:8000/api/profile/", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // Pass token in Authorization header
+            Authorization: `Bearer ${token}`, // Pass the JWT token in the header
           },
         });
 
         if (response.ok) {
           const data = await response.json();
 
-          setUser(data);
+          setUser(data); // Set the fetched user data
         } else {
-          setError("Failed to fetch user information.");
+          const errorData = await response.json();
+
+          setError(errorData.detail || "Failed to fetch user information.");
         }
       } catch {
         setError("An unexpected error occurred.");
-
-        return error;
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
     fetchUserInfo();
   }, []);
+
+  if (loading) {
+    return <p>Loading user information...</p>; // Show a loading state while fetching data
+  }
 
   return (
     <>
@@ -41,6 +57,7 @@ const Dashboard = () => {
         <form>
           <div className="space-y-12">
             <p className="mt-5 font-bold text-[20px]">Welcome To M-Treat </p>
+            <p>{error}</p>
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base/7 font-semibold text-gray-900">
                 Profile
@@ -90,7 +107,7 @@ const Dashboard = () => {
                       className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                       id="first-name"
                       name="first-name"
-                      placeholder={user ? user.firstname : "John"}
+                      placeholder={user ? user.first_name : "John"}
                       type="text"
                     />
                   </div>
@@ -110,7 +127,7 @@ const Dashboard = () => {
                       className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                       id="last-name"
                       name="last-name"
-                      placeholder={user ? user.lastname : "Doe"}
+                      placeholder={user ? user.last_name : "Doe"}
                       type="text"
                     />
                   </div>

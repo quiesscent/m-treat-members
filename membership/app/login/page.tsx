@@ -3,20 +3,28 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Input, Button } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useAppDispatch } from "../../redux/hooks";
 import { loginUser } from "../../redux/slices/authSlice";
 import { RootState } from "../../redux/store";
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useAppDispatch();
   const { loading, error } = useSelector((state: RootState) => state.auth);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    const result = await dispatch(loginUser({ email, password }));
+
+    if (loginUser.fulfilled.match(result)) {
+      // Redirect after successful login
+      localStorage.setItem("token", result.payload.token);
+      router.push("/dashboard");
+    }
   };
 
   return (
@@ -30,6 +38,7 @@ export default function Login() {
           Login
         </div>
         {error && <p className="text-red-500">{error}</p>}
+
         <Input
           isRequired
           errorMessage="Please enter a valid email"

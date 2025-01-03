@@ -3,21 +3,26 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Form, Input, Button } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useAppDispatch } from "../../redux/hooks";
 import { registerUser } from "../../redux/slices/authSlice";
 import { RootState } from "../../redux/store";
 
 export default function Register() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [first_name, setfirstName] = useState("");
+  const [last_name, setLastName] = useState("");
   const [phoneNumber, setPhone] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Password Validation
   useEffect(() => {
     validatePasswords(password, confirmPassword);
   }, [password, confirmPassword]);
@@ -32,11 +37,31 @@ export default function Register() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Validate phone number
     const phone = parseInt(phoneNumber, 10);
 
-    dispatch(registerUser({ username, email, password, phone }));
+    if (isNaN(phone)) {
+      setErrorMessage("Please enter a valid phone number.");
+
+      return;
+    }
+    const result = await dispatch(
+      registerUser({
+        username,
+        email,
+        first_name,
+        last_name,
+        number: phone,
+        password,
+      }),
+    );
+
+    if (registerUser.fulfilled.match(result)) {
+      // Redirect after successful registration
+      router.push("/login");
+    }
   };
 
   return (
@@ -47,10 +72,11 @@ export default function Register() {
         onSubmit={handleSubmit}
       >
         <div className="items-center text-[20px] font-bold uppercase">
-          {" "}
-          Register{" "}
+          Register
         </div>
-        {error && <p>{error}</p>}
+        {error && (
+          <p>{typeof error === "object" ? "An error occurred" : error}</p>
+        )}
         <Input
           isRequired
           errorMessage="Please enter a valid username"
@@ -58,9 +84,31 @@ export default function Register() {
           labelPlacement="outside"
           name="username"
           placeholder="Enter your username"
-          type="username"
+          type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input
+          isRequired
+          errorMessage="Please enter your First Name"
+          label="First Name"
+          labelPlacement="outside"
+          name="first_name"
+          placeholder="Enter your First Name"
+          type="text"
+          value={first_name}
+          onChange={(e) => setfirstName(e.target.value)}
+        />
+        <Input
+          isRequired
+          errorMessage="Please enter your Second Name"
+          label="Second Name"
+          labelPlacement="outside"
+          name="last_name"
+          placeholder="Enter your Last Name"
+          type="text"
+          value={last_name}
+          onChange={(e) => setLastName(e.target.value)}
         />
         <Input
           isRequired
@@ -75,12 +123,12 @@ export default function Register() {
         />
         <Input
           isRequired
-          errorMessage="Please enter a valid phone"
+          errorMessage="Please enter a valid phone number"
           label="Number"
           labelPlacement="outside"
           name="phone"
           placeholder="Enter your number"
-          type="number"
+          type="text"
           value={phoneNumber}
           onChange={(e) => setPhone(e.target.value)}
         />
@@ -97,11 +145,11 @@ export default function Register() {
         />
         <Input
           isRequired
-          errorMessage="Please enter a valid password"
-          label="Password"
+          errorMessage="Please confirm your password"
+          label="Confirm Password"
           labelPlacement="outside"
           name="confirmPassword"
-          placeholder="Enter your password"
+          placeholder="Confirm your password"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -115,10 +163,10 @@ export default function Register() {
         </div>
       </Form>
       <p className="mt-8">
-        Have and account ? Login{" "}
+        Already have an account?{" "}
         <Link className="text-sky-500" href="/login">
-          here
-        </Link>{" "}
+          Login here
+        </Link>
       </p>
     </>
   );

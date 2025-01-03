@@ -4,9 +4,9 @@ from django.db import models
 class CustomUser (AbstractUser ):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
-    number = models.CharField(unique=True) 
+    number = models.IntegerField(unique=True) 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
+    REQUIRED_FIELDS = ['username','number']
 
     class Meta:
         verbose_name_plural ='Users'
