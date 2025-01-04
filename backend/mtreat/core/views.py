@@ -1,4 +1,5 @@
 # users/views.py
+from django.shortcuts import render
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -9,6 +10,22 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 
 User  = get_user_model()
+
+def index(request):
+    
+    return render(request, 'index.html')
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+def login(request):
+    return render(request, 'login.html')
+
+def register(request):
+    return render(request, 'register.html')
+
+def update(request):
+    return render(request, 'update.html')
 
 class UserRegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
